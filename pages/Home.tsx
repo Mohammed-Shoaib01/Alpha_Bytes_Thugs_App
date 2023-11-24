@@ -12,33 +12,14 @@ import {
 } from "react-native";
 import HTMLView from "react-native-htmlview";
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   const [result, setResult] = useState({});
-  const optionList = [
-    {
-      id: 1,
-      color: "#999999",
-      icon: "https://t4.ftcdn.net/jpg/00/97/58/97/360_F_97589769_t45CqXyzjz0KXwoBZT9PRaWGHRk5hQqQ.jpg",
-      name: "Dr.Cat",
-      occ: " General Physician",
-      firm: "Feline Hospital",
-      education: ["AIIMS Delhi", "Catword Medical School"],
-    },
-    {
-      id: 2,
-      color: "#999999",
-      icon: "https://img.freepik.com/free-photo/isolated-happy-smiling-dog-white-background-portrait-4_1562-693.jpg?w=2000",
-      name: "Dr.Dog",
-      occ: "Cardiologist",
-      firm: "Canine Hospital",
-      education: ["Brown Dog University"],
-    },
-  ];
+  const [fontSize, SetFontSize] = useState(14);
 
   const [searchText, setSearchText] = useState("");
   // const trimVal = searchText.trim().toLowerCase();
   // const api = `https://en.wikipedia.org/w/api.php?action=query&list=search&prop=info&inprop=url&utf8=&format=json&origin=*&srlimit=20&srsearch=${trimVal}`;
-  // const response = await fetch(api);
+  // const response = await fetch(api);.
 
   async function fetchData(val) {
     const trimVal = val.trim().toLowerCase();
@@ -60,7 +41,7 @@ export default function HomeScreen() {
 
   const handleSearch = async (e) => {
     setSearchText(e);
-    await fetchData(searchText);
+    await fetchData(e);
     console.log(result);
   };
   // const filteredData = optionList.filter((item) => {
@@ -69,10 +50,52 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
+      <View style={{ flexDirection: "row" }}>
+        <View style={{ justifyContent: "center" }}>
+          <Text style={{ fontWeight: "bold", fontSize: fontSize }}>
+            Change Font:
+          </Text>
+        </View>
+        <TouchableOpacity
+          onPress={() => {
+            SetFontSize(fontSize - 1);
+          }}
+          style={{ flex: 0, margin: 5 }}
+        >
+          {/* button kek also why comments being weird here */}
+          <View
+            style={{ padding: 10, backgroundColor: "blue", borderRadius: 10 }}
+          >
+            <Text
+              style={{ color: "white", fontWeight: "bold", fontSize: fontSize }}
+            >
+              -1
+            </Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{ flex: 0, margin: 5 }}
+          onPress={() => {
+            SetFontSize(fontSize + 1);
+          }}
+        >
+          {/* button kek also why comments being weird here */}
+          <View
+            style={{ padding: 10, backgroundColor: "blue", borderRadius: 10 }}
+          >
+            <Text
+              style={{ color: "white", fontWeight: "bold", fontSize: fontSize }}
+            >
+              +1
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.formContent}>
         <View style={styles.inputContainer}>
           <TextInput
-            style={styles.inputs}
+            style={[styles.inputs, { fontSize: fontSize }]}
             placeholder="Search for a wiki..."
             underlineColorAndroid="transparent"
             onChangeText={handleSearch}
@@ -86,19 +109,25 @@ export default function HomeScreen() {
         data={result}
         renderItem={({ item }) => {
           return (
-            <View key={item.pageid.toString()} style={[styles.card]}>
+            <TouchableOpacity
+              key={item.pageid.toString()}
+              onPress={() => {
+                navigation.push("WikiDetails", [fontSize, item.title]);
+              }}
+              style={[styles.card]}
+            >
               <View style={styles.cardContent}>
-                <Text style={styles.name}>
+                <Text style={[styles.name, { fontSize: fontSize + 6 }]}>
                   {"Title: "}
                   {item ? item.title : "nothing found"}
                 </Text>
 
                 <HTMLView
                   style={{ marginLeft: 10 }}
-                  value={`<p>${item.snippet}</p>`}
+                  value={`<p style="font-size:${fontSize}">${item.snippet}</p>`}
                 />
               </View>
-            </View>
+            </TouchableOpacity>
           );
         }}
       />
@@ -169,7 +198,6 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   name: {
-    fontSize: 20,
     fontWeight: "bold",
     marginLeft: 10,
     alignSelf: "auto",

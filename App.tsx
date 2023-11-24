@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import DrawerItems from "./constants/MenuItems";
 import { Feather } from "@expo/vector-icons";
 import HomeScreen from "./pages/Home";
+import WikiDetails from "./pages/nestedPages/WikiDetails";
 
 const Stack = createNativeStackNavigator();
 // const Drawer = createDrawerNavigator();
