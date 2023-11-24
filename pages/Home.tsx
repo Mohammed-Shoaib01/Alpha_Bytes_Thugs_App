@@ -22,7 +22,7 @@ export default function HomeScreen({ navigation }) {
   // const response = await fetch(api);.
 
   async function fetchData(val) {
-    const trimVal = val.trim().toLowerCase();
+    const trimVal = encodeURIComponent(val.toLowerCase());
     console.log(trimVal);
     if (trimVal.length > 0) {
       try {
