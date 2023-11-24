@@ -88,19 +88,15 @@ export default function HomeScreen() {
           return (
             <View key={item.pageid.toString()} style={[styles.card]}>
               <View style={styles.cardContent}>
-                <View
-                  style={{
-                    backgroundColor: "grey",
-                    width: "100%",
-                  }}
-                >
-                  <Text style={styles.name}>
-                    {"Title: "}
-                    {item ? item.title : "nothing found"}
-                  </Text>
-                </View>
+                <Text style={styles.name}>
+                  {"Title: "}
+                  {item ? item.title : "nothing found"}
+                </Text>
 
-                <HTMLView value={`<p>${item.snippet}</p>`} />
+                <HTMLView
+                  style={{ marginLeft: 10 }}
+                  value={`<p>${item.snippet}</p>`}
+                />
               </View>
             </View>
           );
