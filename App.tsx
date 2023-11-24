@@ -59,6 +59,7 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Group>
           <Stack.Screen name="Wikipedia" component={HomeScreen} />
+          <Stack.Screen name="WikiDetails" component={WikiDetails} />
         </Stack.Group>
       </Stack.Navigator>
     </NavigationContainer>

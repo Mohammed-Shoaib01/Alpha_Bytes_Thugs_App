@@ -15,7 +15,7 @@ import HTMLView from "react-native-htmlview";
 export default function HomeScreen({ navigation }) {
   const [result, setResult] = useState({});
   const [fontSize, SetFontSize] = useState(14);
-
+  const [language, setLanguage] = useState("english");
   const [searchText, setSearchText] = useState("");
   // const trimVal = searchText.trim().toLowerCase();
   // const api = `https://en.wikipedia.org/w/api.php?action=query&list=search&prop=info&inprop=url&utf8=&format=json&origin=*&srlimit=20&srsearch=${trimVal}`;
@@ -90,6 +90,27 @@ export default function HomeScreen({ navigation }) {
             </Text>
           </View>
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            if (language === "english") {
+              setLanguage("telugu");
+            } else {
+              setLanguage("english");
+            }
+          }}
+          style={{ flex: 0, margin: 5 }}
+        >
+          {/* button kek also why comments being weird here */}
+          <View
+            style={{ padding: 10, backgroundColor: "blue", borderRadius: 10 }}
+          >
+            <Text
+              style={{ color: "white", fontWeight: "bold", fontSize: fontSize }}
+            >
+              {language}
+            </Text>
+          </View>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.formContent}>
@@ -124,7 +145,7 @@ export default function HomeScreen({ navigation }) {
 
                 <HTMLView
                   style={{ marginLeft: 10 }}
-                  value={`<p style="font-size:${fontSize}">${item.snippet}</p>`}
+                  value={`<p style="font-size:${fontSize}">${item.snippet}</p> `}
                 />
               </View>
             </TouchableOpacity>

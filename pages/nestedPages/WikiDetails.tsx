@@ -9,27 +9,78 @@ import {
   Alert,
   TextInput,
   FlatList,
+  ScrollView,
 } from "react-native";
+import axios from "axios";
 
 export default function WikiDetails({ route, navigation }) {
   const [result, setResult] = useState({});
-  const [fontSize, setFontSize] = useState(14);
-  const title = "Albert Einstein";
+  const [fontSize, setFontSize] = useState(route.params[0]);
+  const [summary, setSummary] = useState("");
+  const title = route.params[1];
+  const language = route.params[2];
+
   //   setFontSize(14);
 
   // const trimVal = searchText.trim().toLowerCase();
   // const api = `https://en.wikipedia.org/w/api.php?action=query&list=search&prop=info&inprop=url&utf8=&format=json&origin=*&srlimit=20&srsearch=${trimVal}`;
   // const response = await fetch(api);.
+  function extractTextInCurlyBraces(inputString) {
+    const regex = /\{(.*?)\}/; // Regular expression to match text inside curly braces
+    const match = regex.exec(inputString);
+    if (match && match.length > 1) {
+      return match[1].trim(); // Extracted text inside curly braces
+    }
+    return null; // Return null if no match is found
+  }
+
+  const getChatbotResponse = async (userInput) => {
+    //said response function lol
+    console.log(`userinput: ${userInput}`);
+    try {
+      const response = await axios.post(
+        "https://api.openai.com/v1/engines/text-davinci-003/completions",
+        {
+          prompt: `User: give me a summary of: ${userInput} in write the summary inside { } and nothing else.\n`,
+          max_tokens: 150,
+          n: 1,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization:
+              "Bearer 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", // said api do not copy this is secret lmao
+          },
+        }
+      );
+
+      return [
+        /*gives an id to each response tried making it serial but didnt work so some dude said to do this*/
+        {
+          _id: Math.round(Math.random() * 1000000),
+          text: `summary bot: ${response.data.choices[0].text.trim()}`,
+          createdAt: new Date(),
+        },
+      ];
+    } catch (error) {
+      //error handling that some guy on yt said to add cause ai can cause errors *[acts shocked]*
+      console.error(error); //some random shit cause f errors
+      return [];
+    }
+  };
+
   useEffect(() => {
     async function fetchData() {
       //displays when opened
       try {
-        const api = `https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=${title}&exintro=true`;
-        const response = await fetch(api);
+        const response = await axios.get(
+          `https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=${title}&exintro=true`
+        );
 
-        const responseJSON = await Object.values(response.query.pages)[0];
-        console.log(responseJSON);
-
+        const page = await Object.values(response.data.query.pages)[0];
+        chatbot(page.extract);
+        console.log(page);
+        setResult(page.extract);
         // setResult(responseJSON.query.pages);
       } catch (error) {
         console.log(error);
@@ -38,7 +89,14 @@ export default function WikiDetails({ route, navigation }) {
     }
     fetchData();
   }, []);
+  async function chatbot(result) {
+    const response2 = await getChatbotResponse(result);
+    console.log(response2[0].text);
+    const summaryOutput = extractTextInCurlyBraces(response2[0].text);
 
+    setSummary(summaryOutput);
+    console.log(summary);
+  }
   //   async function fetchData(val) {
 
   //       try {
@@ -60,15 +118,17 @@ export default function WikiDetails({ route, navigation }) {
   // });
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.header}>
         {/* <Image style={styles.photo} source={{ uri: icon }} /> */}
-        <Text style={styles.name}>{title}</Text>
+        <Text style={[styles.name, { fontSize: fontSize + 10 }]}>{title}</Text>
         {/* <Text style={styles.title}>{firm}</Text> */}
       </View>
       <View style={styles.body}>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Education</Text>
+          <Text style={[styles.sectionTitle, { fontSize: fontSize + 6 }]}>
+            About:
+          </Text>
 
           {/* <View style={styles.sectionContent}>
             {education.map((event, i) => {
@@ -81,33 +141,12 @@ export default function WikiDetails({ route, navigation }) {
           </View> */}
         </View>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Occupation</Text>
-
-          <View style={styles.sectionContent}>
-            {/* <Text style={styles.sectionItem}>{occ}</Text> */}
-          </View>
-        </View>
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Experience</Text>
-          <View style={styles.sectionContent}>
-            <View style={styles.sectionItem}>
-              <Text style={styles.sectionItemTitle}>ABC Law Firm</Text>
-              <Text style={styles.sectionItemDesc}>
-                - Worked in the xyz company's law team and did lawstuff
-              </Text>
-            </View>
-            <View style={styles.sectionItem}>
-              <Text style={styles.sectionItemTitle}>
-                patent team, XYZ Company (2020-2021)
-              </Text>
-              <Text style={styles.sectionItemDesc}>
-                - worked in Salman Khan's law team for his popular case
-              </Text>
-            </View>
-          </View>
+          <Text style={[styles.sectionItemTitle, { fontSize: fontSize }]}>
+            {summary}
+          </Text>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 const styles = StyleSheet.create({
@@ -149,7 +188,6 @@ const styles = StyleSheet.create({
     marginVertical: 4,
   },
   sectionItemTitle: {
-    fontSize: 14,
     fontWeight: "600",
   },
   sectionItemDesc: {
