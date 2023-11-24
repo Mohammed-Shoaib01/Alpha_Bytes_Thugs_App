@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import HTMLView from "react-native-htmlview";
 
+import Icon from 'react-native-vector-icons/FontAwesome5';
 export default function HomeScreen({ navigation }) {
   const [result, setResult] = useState({});
   const [fontSize, SetFontSize] = useState(14);
@@ -21,6 +22,14 @@ export default function HomeScreen({ navigation }) {
   // const api = `https://en.wikipedia.org/w/api.php?action=query&list=search&prop=info&inprop=url&utf8=&format=json&origin=*&srlimit=20&srsearch=${trimVal}`;
   // const response = await fetch(api);.
 
+  const [isDarkMode, setDarkMode]=useState(false);
+
+  const [allBackgroundColor, setBackgroundColor] = useState('#eee');
+  const [textColor, setTextColor] = useState('black');
+  const [selectBackgroundColor, setSelectBackgroundColor]=useState('white');
+
+
+  
   async function fetchData(val) {
     const trimVal = encodeURIComponent(val.toLowerCase());
     console.log(trimVal);
@@ -47,12 +56,18 @@ export default function HomeScreen({ navigation }) {
   // const filteredData = optionList.filter((item) => {
   //   return item.name.toLowerCase().includes(searchText.toLowerCase());
   // });
-
+  const html = StyleSheet.create({
+    p:{
+      color: textColor,
+      fontSize: fontSize
+    }
+  
+  })
   return (
-    <View style={styles.container}>
+     <View style={[styles.container, {backgroundColor:allBackgroundColor, height:"100%"}]}>
       <View style={{ flexDirection: "row" }}>
         <View style={{ justifyContent: "center" }}>
-          <Text style={{ fontWeight: "bold", fontSize: fontSize }}>
+          <Text style={{ fontWeight: "bold", fontSize: fontSize, color:textColor }}>
             Change Font:
           </Text>
         </View>
@@ -92,6 +107,10 @@ export default function HomeScreen({ navigation }) {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
+            setBackgroundColor(allBackgroundColor === "#eee" ? '#0f0f0f' : "#eee");
+            setTextColor(textColor === 'black' ? 'white' : 'black');
+            setDarkMode(isDarkMode==='false'?'true':'false');
+            setSelectBackgroundColor(selectBackgroundColor==='white'?'#272727':'white');
             if (language === "english") {
               setLanguage("telugu");
             } else {
@@ -107,17 +126,20 @@ export default function HomeScreen({ navigation }) {
             <Text
               style={{ color: "white", fontWeight: "bold", fontSize: fontSize }}
             >
+                        <Icon name={isDarkMode==='false'?'moon':'sun'} size={fontSize+5} color={isDarkMode==='false'?'white':'yellow'} />
               {language}
+              
             </Text>
           </View>
         </TouchableOpacity>
       </View>
 
-      <View style={styles.formContent}>
-        <View style={styles.inputContainer}>
+      <View style={[styles.formContent,{backgroundColor:allBackgroundColor}]}>
+        <View style={[styles.inputContainer, {backgroundColor:selectBackgroundColor}]}>          
           <TextInput
-            style={[styles.inputs, { fontSize: fontSize }]}
+            style={[styles.inputs, { fontSize: fontSize, backgroundColor:selectBackgroundColor, color:textColor }]}            
             placeholder="Search for a wiki..."
+            placeholderTextColor={isDarkMode==='true'?'#838383':'#7d7d7d'}
             underlineColorAndroid="transparent"
             onChangeText={handleSearch}
             value={searchText}
@@ -135,18 +157,15 @@ export default function HomeScreen({ navigation }) {
               onPress={() => {
                 navigation.push("WikiDetails", [fontSize, item.title]);
               }}
-              style={[styles.card]}
-            >
+              style={[styles.card,{backgroundColor:isDarkMode?'#272727':'white'}]}            >
               <View style={styles.cardContent}>
-                <Text style={[styles.name, { fontSize: fontSize + 6 }]}>
-                  {"Title: "}
+                <Text style={[styles.name, { fontSize: fontSize + 6, color:textColor }]}>                  {"Title: "}
                   {item ? item.title : "nothing found"}
                 </Text>
 
                 <HTMLView
-                  style={{ marginLeft: 10 }}
-                  value={`<p style="font-size:${fontSize}">${item.snippet}</p> `}
-                />
+                  stylesheet={html}
+                  value={`<p>${item.snippet}</p>`}                />
               </View>
             </TouchableOpacity>
           );
@@ -187,6 +206,10 @@ const styles = StyleSheet.create({
     marginLeft: 16,
     borderBottomColor: "#FFFFFF",
     flex: 1,
+    borderBottomRightRadius: 70,
+    borderTopRightRadius: 70,
+    borderBottomLeftRadius: 7,
+    borderTopLeftRadius: 7,
   },
   inputIcon: {
     marginLeft: 15,
