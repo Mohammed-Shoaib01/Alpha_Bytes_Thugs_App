@@ -105,12 +105,33 @@ export default function HomeScreen({ navigation }) {
             </Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity
+
+
+                <TouchableOpacity
           onPress={() => {
             setBackgroundColor(allBackgroundColor === "#eee" ? '#0f0f0f' : "#eee");
             setTextColor(textColor === 'black' ? 'white' : 'black');
             setDarkMode(isDarkMode==='false'?'true':'false');
             setSelectBackgroundColor(selectBackgroundColor==='white'?'#272727':'white');
+          }}
+          style={{ flex: 0, margin: 5 }}
+        >
+          {/* button kek also why comments being weird here */}
+          <View
+            style={{ padding: 10, backgroundColor: "blue", borderRadius: 10 }}
+          >
+            <Text
+              style={{ color: "white", fontWeight: "bold", fontSize: fontSize }}
+            >
+             
+          <Icon name={isDarkMode==='false'?'moon':'sun'} size={fontSize+5} color={isDarkMode==='false'?'white':'yellow'} />
+        
+            </Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => {
             if (language === "english") {
               setLanguage("telugu");
             } else {
@@ -126,9 +147,7 @@ export default function HomeScreen({ navigation }) {
             <Text
               style={{ color: "white", fontWeight: "bold", fontSize: fontSize }}
             >
-                        <Icon name={isDarkMode==='false'?'moon':'sun'} size={fontSize+5} color={isDarkMode==='false'?'white':'yellow'} />
               {language}
-              
             </Text>
           </View>
         </TouchableOpacity>
