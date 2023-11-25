@@ -19,6 +19,8 @@ export default function WikiDetails({ route, navigation }) {
   const [summary, setSummary] = useState("");
   const title = route.params[1];
   const language = route.params[2];
+  const isDarkMode = route.params[3];
+
 
   //   setFontSize(14);
 
@@ -129,15 +131,15 @@ export default function WikiDetails({ route, navigation }) {
     },
   });
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
+    <ScrollView style={[styles.container, { fontSize: fontSize + 10, backgroundColor:isDarkMode?'#0f0f0f':'#eee', color:isDarkMode?'black':'white'}]}>
+      <View style={[styles.header, {color:isDarkMode?'white':'black'}]}>
         {/* <Image style={styles.photo} source={{ uri: icon }} /> */}
-        <Text style={[styles.name, { fontSize: fontSize + 10 }]}>{title}</Text>
+        <Text style={[styles.name, {color:isDarkMode?'white':'black'}]}>{title}</Text>
         {/* <Text style={styles.title}>{firm}</Text> */}
       </View>
       <View style={styles.body}>
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { fontSize: fontSize + 6 }]}>
+          <Text style={[styles.sectionTitle, { fontSize: fontSize + 6,color:isDarkMode?'white':'black' }]}>
             About:
           </Text>
 
@@ -156,7 +158,7 @@ export default function WikiDetails({ route, navigation }) {
             {summary}
           </Text> */}
           {language === "english" ? (
-            <Text style={[styles.sectionItemTitle, { fontSize: fontSize }]}>
+            <Text style={[styles.sectionItemTitle, { fontSize: fontSize, color:isDarkMode?'white':'black' }]}>
               {summary}
             </Text>
           ) : (

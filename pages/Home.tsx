@@ -390,7 +390,7 @@ export default function HomeScreen({ navigation }) {
                   title = await getTeluguTitle(item.title);
                 }
 
-                navigation.push("WikiDetails", [fontSize, title, language]);
+                navigation.push("WikiDetails", [fontSize, title, language, isDarkMode]);
               }}
               style={styles.card}
             >
