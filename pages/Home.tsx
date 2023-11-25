@@ -178,7 +178,8 @@ export default function HomeScreen({ navigation }) {
               }}
               style={[styles.card,{backgroundColor:isDarkMode?'#272727':'white'}]}            >
               <View style={styles.cardContent}>
-                <Text style={[styles.name, { fontSize: fontSize + 6, color:textColor }]}>                  {"Title: "}
+                <Text style={[styles.name, { fontSize: fontSize + 6, color:textColor }]}>                  
+                  {"Title: "}
                   {item ? item.title : "nothing found"}
                 </Text>
 
