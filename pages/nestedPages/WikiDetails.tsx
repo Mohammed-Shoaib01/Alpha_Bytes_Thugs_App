@@ -12,7 +12,7 @@ import {
   ScrollView,
 } from "react-native";
 import axios from "axios";
-
+import HTMLView from "react-native-htmlview";
 export default function WikiDetails({ route, navigation }) {
   const [result, setResult] = useState({});
   const [fontSize, setFontSize] = useState(route.params[0]);
@@ -41,7 +41,7 @@ export default function WikiDetails({ route, navigation }) {
       const response = await axios.post(
         "https://api.openai.com/v1/engines/text-davinci-003/completions",
         {
-          prompt: `User: give me a summary of: ${userInput} in write the summary inside { } and nothing else.\n`,
+          prompt: `User: give me a summary of: ${userInput} in write the summary inside { } in less than 140 tokens and nothing else.\n`,
           max_tokens: 150,
           n: 1,
         },
@@ -73,14 +73,21 @@ export default function WikiDetails({ route, navigation }) {
     async function fetchData() {
       //displays when opened
       try {
-        const response = await axios.get(
-          `https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=${title}&exintro=true`
-        );
-
-        const page = await Object.values(response.data.query.pages)[0];
-        chatbot(page.extract);
-        console.log(page);
-        setResult(page.extract);
+        if (language === "english") {
+          const response = await axios.get(
+            `https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=${title}&exintro=true`
+          );
+          const page = await Object.values(response.data.query.pages)[0];
+          chatbot(page.extract);
+          console.log(page);
+          setResult(page.extract);
+        } else {
+          const response = await axios.get(
+            `https://te.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=${title}&exintro=true`
+          );
+          const page = await Object.values(response.data.query.pages)[0];
+          setSummary(page.extract);
+        }
         // setResult(responseJSON.query.pages);
       } catch (error) {
         console.log(error);
@@ -116,7 +123,11 @@ export default function WikiDetails({ route, navigation }) {
   // const filteredData = optionList.filter((item) => {
   //   return item.name.toLowerCase().includes(searchText.toLowerCase());
   // });
-
+  const html = StyleSheet.create({
+    p: {
+      fontSize: fontSize, // make links coloured pink
+    },
+  });
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -141,9 +152,20 @@ export default function WikiDetails({ route, navigation }) {
           </View> */}
         </View>
         <View style={styles.section}>
-          <Text style={[styles.sectionItemTitle, { fontSize: fontSize }]}>
+          {/* <Text style={[styles.sectionItemTitle, { fontSize: fontSize }]}>
             {summary}
-          </Text>
+          </Text> */}
+          {language === "english" ? (
+            <Text style={[styles.sectionItemTitle, { fontSize: fontSize }]}>
+              {summary}
+            </Text>
+          ) : (
+            <HTMLView
+              stylesheet={html}
+              style={{ marginLeft: 10 }}
+              value={`${summary}`}
+            />
+          )}
         </View>
       </View>
     </ScrollView>
