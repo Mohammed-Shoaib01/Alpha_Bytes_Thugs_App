@@ -63,6 +63,91 @@ export default function HomeScreen({ navigation }) {
     }
   
   })
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: "#EBEBEB",
+    },
+    formContent: {
+      flexDirection: "row",
+      marginTop: 30,
+    },
+    inputContainer: {
+      borderBottomColor: "#F5FCFF",
+      backgroundColor: "#FFFFFF",
+      borderRadius: 30,
+      borderBottomWidth: 1,
+      height: 45,
+      flexDirection: "row",
+      alignItems: "center",
+      flex: 1,
+      margin: 10,
+    },
+    icon: {
+      width: 30,
+      height: 30,
+    },
+    iconBtnSearch: {
+      alignSelf: "center",
+    },
+    inputs: {
+      height: 45,
+      marginLeft: 16,
+      borderBottomColor: "#FFFFFF",
+      flex: 1,
+      borderBottomRightRadius: 70,
+      borderTopRightRadius: 70,
+      borderBottomLeftRadius: 7,
+      borderTopLeftRadius: 7,
+    },
+    inputIcon: {
+      marginLeft: 15,
+      justifyContent: "center",
+    },
+    notificationList: {
+      marginTop: 20,
+      padding: 10,
+    },
+    card: {
+      height: null,
+      paddingTop: 3,
+      paddingBottom: 10,
+      marginTop: 5,
+      backgroundColor: selectBackgroundColor ,
+      flexDirection: "column",
+  
+      marginBottom: 20,
+    },
+    cardContent: {
+      flexDirection: "column",
+      marginLeft: 10,
+    },
+    imageContent: {
+      marginTop: -40,
+    },
+    image: {
+      width: 60,
+      height: 60,
+      borderRadius: 30,
+    },
+    name: {
+      fontWeight: "bold",
+      marginLeft: 10,
+      alignSelf: "auto",
+    },
+    occ: {
+      fontSize: 16,
+      marginLeft: 10,
+      alignSelf: "auto",
+    },
+    btnColor: {
+      padding: 10,
+      borderRadius: 40,
+      marginHorizontal: 3,
+      backgroundColor: "#eee",
+      marginTop: 5,
+    },
+  });
   return (
      <View style={[styles.container, {backgroundColor:allBackgroundColor, height:"100%"}]}>
       <View style={{ flexDirection: "row" }}>
@@ -111,7 +196,7 @@ export default function HomeScreen({ navigation }) {
           onPress={() => {
             setBackgroundColor(allBackgroundColor === "#eee" ? '#0f0f0f' : "#eee");
             setTextColor(textColor === 'black' ? 'white' : 'black');
-            setDarkMode(isDarkMode==='false'?'true':'false');
+            setDarkMode(isDarkMode===false?true:false);
             setSelectBackgroundColor(selectBackgroundColor==='white'?'#272727':'white');
           }}
           style={{ flex: 0, margin: 5 }}
@@ -124,7 +209,7 @@ export default function HomeScreen({ navigation }) {
               style={{ color: "white", fontWeight: "bold", fontSize: fontSize }}
             >
              
-          <Icon name={isDarkMode==='false'?'moon':'sun'} size={fontSize+5} color={isDarkMode==='false'?'white':'yellow'} />
+          <Icon name={isDarkMode===false?'moon':'sun'} size={fontSize+5} color={isDarkMode===false?'white':'yellow'} />
         
             </Text>
           </View>
@@ -158,7 +243,7 @@ export default function HomeScreen({ navigation }) {
           <TextInput
             style={[styles.inputs, { fontSize: fontSize, backgroundColor:selectBackgroundColor, color:textColor }]}            
             placeholder="Search for a wiki..."
-            placeholderTextColor={isDarkMode==='true'?'#838383':'#7d7d7d'}
+            placeholderTextColor={isDarkMode===true?'#838383':'#7d7d7d'}
             underlineColorAndroid="transparent"
             onChangeText={handleSearch}
             value={searchText}
@@ -176,8 +261,8 @@ export default function HomeScreen({ navigation }) {
               onPress={() => {
                 navigation.push("WikiDetails", [fontSize, item.title]);
               }}
-              style={[styles.card,{backgroundColor:isDarkMode?'#272727':'white'}]}            >
-              <View style={styles.cardContent}>
+              style={styles.card}            >
+              <View style={[styles.cardContent,{backgroundColor:isDarkMode?'#272727':'white'}]}>
                 <Text style={[styles.name, { fontSize: fontSize + 6, color:textColor }]}>                  
                   {"Title: "}
                   {item ? item.title : "nothing found"}
@@ -194,88 +279,3 @@ export default function HomeScreen({ navigation }) {
     </View>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#EBEBEB",
-  },
-  formContent: {
-    flexDirection: "row",
-    marginTop: 30,
-  },
-  inputContainer: {
-    borderBottomColor: "#F5FCFF",
-    backgroundColor: "#FFFFFF",
-    borderRadius: 30,
-    borderBottomWidth: 1,
-    height: 45,
-    flexDirection: "row",
-    alignItems: "center",
-    flex: 1,
-    margin: 10,
-  },
-  icon: {
-    width: 30,
-    height: 30,
-  },
-  iconBtnSearch: {
-    alignSelf: "center",
-  },
-  inputs: {
-    height: 45,
-    marginLeft: 16,
-    borderBottomColor: "#FFFFFF",
-    flex: 1,
-    borderBottomRightRadius: 70,
-    borderTopRightRadius: 70,
-    borderBottomLeftRadius: 7,
-    borderTopLeftRadius: 7,
-  },
-  inputIcon: {
-    marginLeft: 15,
-    justifyContent: "center",
-  },
-  notificationList: {
-    marginTop: 20,
-    padding: 10,
-  },
-  card: {
-    height: null,
-    paddingTop: 3,
-    paddingBottom: 10,
-    marginTop: 5,
-    backgroundColor: "#FFFFFF",
-    flexDirection: "column",
-
-    marginBottom: 20,
-  },
-  cardContent: {
-    flexDirection: "column",
-    marginLeft: 10,
-  },
-  imageContent: {
-    marginTop: -40,
-  },
-  image: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-  },
-  name: {
-    fontWeight: "bold",
-    marginLeft: 10,
-    alignSelf: "auto",
-  },
-  occ: {
-    fontSize: 16,
-    marginLeft: 10,
-    alignSelf: "auto",
-  },
-  btnColor: {
-    padding: 10,
-    borderRadius: 40,
-    marginHorizontal: 3,
-    backgroundColor: "#eee",
-    marginTop: 5,
-  },
-});
