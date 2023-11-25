@@ -51,7 +51,7 @@ export default function WikiDetails({ route, navigation }) {
           headers: {
             "Content-Type": "application/json",
             Authorization:
-              "Bearer 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", // said api do not copy this is secret lmao
+              // "Bearer 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", // said api do not copy this is secret lmao
           },
         }
       );
